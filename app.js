@@ -1,20 +1,21 @@
 const form = document.querySelector(".todo-form");
 const input = document.querySelector(".todo-input");
 const todoContainer = document.querySelector(".todo-container");
+let deleteBtns;
 
 const addHTML = (todo) => {
     /* bu todo-container içerisinde olacak
-                      <div class="todo">
-                         <div class="todo-left">
-                            <input type="checkbox" class="todo-cb">
-                            <span class="todo-text">Markete Git</span>
-                         </div>
-                         <div class="todo-right">
-                            <button class="todo-delete">Sil</button>
-                            <button class="todo-edit">Edit</button>
-                         </div>
-                      </div>
-                       */
+                                  <div class="todo">
+                                     <div class="todo-left">
+                                        <input type="checkbox" class="todo-cb">
+                                        <span class="todo-text">Markete Git</span>
+                                     </div>
+                                     <div class="todo-right">
+                                        <button class="todo-delete">Sil</button>
+                                        <button class="todo-edit">Edit</button>
+                                     </div>
+                                  </div>
+                                   */
     const span = document.createElement("span");
     span.classList.add("todo-text");
     span.textContent = todo.text;
@@ -53,6 +54,7 @@ const startConf = () => {
         todos.forEach((todo) => {
             addHTML(todo);
         });
+        deleteBtns = document.querySelectorAll(".todo-delete");
     }
 };
 startConf();
@@ -70,3 +72,12 @@ const addTodo = (e) => {
     e.preventDefault();
 };
 form.addEventListener("submit", addTodo);
+const deleteTodo = (e) => {
+    const todo = e.target.parentElement.parentElement;
+    const text = todo.firstChild.children[1].textContent;
+    let todos = JSON.parse(localStorage.getItem("todos"));
+    todos = todos.filter((td) => td.text !== text);
+    localStorage.setItem("todos", JSON.stringify(todos));
+    todo.remove();
+};
+deleteBtns.forEach((btn) => btn.addEventListener("click", deleteTodo));
